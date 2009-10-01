@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE struts-config PUBLIC
+  "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+  "http://jakarta.apache.org/struts/dtds/struts-config_1_2.dtd">
+
+<struts-config>
+
+  <form-beans>
+
+    <form-bean name="listForm" type="org.apache.struts.action.DynaActionForm">
+      <form-property type="java.util.ArrayList" name="users"/>
+    </form-bean>
+
+    <form-bean name="userForm" type="org.apache.struts.validator.DynaValidatorForm">
+      <form-property type="java.lang.String" name="id"/>
+      <form-property type="java.lang.String" name="password"/>
+      <form-property type="java.lang.String" name="roles"/>
+    </form-bean>
+
+  </form-beans>
+
+  <global-exceptions>
+    <exception type="java.lang.Exception"
+      key="errors.global"
+      handler="org.apache.struts.action.ExceptionHandler"
+      path="/index.jspx"
+      scope="request"/>
+  </global-exceptions>
+    
+  <global-forwards>
+    <!-- Example logon forward
+    <forward name="logon" path="/logon.jspx"/>
+    -->
+  </global-forwards>
+
+  <action-mappings>
+
+    <!-- initialize DB and display in list view -->
+    <action path="/admin/init"
+       type="authdb.ui.InitAction">
+       <forward name="success" path="/admin/list.do"/>
+    </action>
+    
+    <!-- obtain user list from DB and display in list view -->
+    <action path="/admin/list"
+       type="authdb.ui.ListAction"
+       name="listForm"
+       scope="request">
+      <forward name="success" path="/WEB-INF/jsp/admin/list.jspx"/>
+    </action>
+
+    <!-- delete user from DB and forward to list -->
+    <action path="/admin/delete" 
+       type="authdb.ui.DeleteAction">
+       <forward name="success" path="/admin/list.do"/>
+    </action>
+
+    <!-- create form bean and display in add view -->
+    <action path="/admin/add" 
+       name="userForm" 
+       scope="request"
+       validate="false"
+       forward="/WEB-INF/jsp/admin/add.jspx"/>
+
+    <!-- add user to DB and forward to list -->
+    <action path="/admin/addSubmit"
+       type="authdb.ui.AddAction"
+       name="userForm"
+       input="/WEB-INF/jsp/admin/add.jspx"
+       scope="request">
+      <forward name="success" path="/admin/list.do"/>
+    </action>
+
+    <!-- instantiate form bean, populate from DB, and display in edit view -->
+    <action path="/admin/edit" 
+       type="authdb.ui.FindAction"
+       name="userForm" 
+       validate="false"
+       scope="request">
+      <forward name="success" path="/WEB-INF/jsp/admin/edit.jspx"/>
+    </action>
+
+    <!-- change user in DB and forward to list -->
+    <action path="/admin/editSubmit"
+       type="authdb.ui.EditAction"
+       name="userForm"
+       validate="true"
+       input="/WEB-INF/jsp/admin/edit.jspx"
+       scope="request">
+      <forward name="success" path="/admin/list.do"/>
+    </action>
+
+  </action-mappings>
+
+  <message-resources parameter="authdb.ui.ApplicationResources" null="false" />
+
+  <plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+    <set-property 
+      property="pathnames" 
+      value="/WEB-INF/struts/validator-rules.xml, /WEB-INF/struts/validation.xml"/>
+  </plug-in>
+  
+</struts-config>

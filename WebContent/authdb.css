@@ -1,0 +1,18 @@
+  BODY {
+    background: orange;
+    font-family: sans-serif;
+    color: black;
+  }
+  
+  H1, H2, H3, H4, H5, H6 {
+  	color: blue;
+  }
+  
+  H1 {
+    letter-spacing: 0.1em
+  }
+  
+  :link { text-decoration: none; }
+  :visited { text-decoration: none; }
+  :link:hover, :visited:hover { text-decoration: underline; }
+  :link:active, :visited:active { text-decoration: none; }
